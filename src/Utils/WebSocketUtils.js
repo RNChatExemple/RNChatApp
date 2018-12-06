@@ -1,64 +1,62 @@
-import {Platform} from 'react-native';
-import { AsyncStorage} from 'react-native';
+import {
+  Platform
+} from 'react-native';
+import {
+  AsyncStorage
+} from 'react-native';
 import SocketIOClient from 'socket.io-client';
+import {
+  store
+} from '../../App'
+import {
+  receiveMessage,
+  joinedChat
+} from '../Configs/reducer'
 
 export default class WebSocketUtils {
-    clientserverUserId; 
-    lasreceived; 
-    joined;
-    serverUserId;
+  clientserverUserId;
+  lasreceived;
+  joined;
+  serverUserId;
+  onJoined;
 
-    constructor() {
-      this.clientserverUserId =  Platform.OS === 'ios' ? 'IS' : 'AN';
-      this.lasreceived = null;
-    }
-
-    static generatesUserId() {
-        //return (Math.random() *100000).toString();
-        return Platform.OS === 'ios' ? 'IS' : 'AN';
-    }
-
-    init(onJoined, onReceivedMessage){
-        this.socket = SocketIOClient('http://192.168.0.8:3000');
-        this.socket.on('message', (message) => {this.lasreceived = message});
-        console.warn("INIT",onJoined)
-        this.determineUser(onJoined);
-    }
-
-      /**
-   * When a user joins the chatroom, check if they are an existing user.
-   * If they aren't, then ask the server for a serverUserId.
-   * Set the serverUserId to the component's state.
-   */
-  determineUser(onJoined) {
-    console.warn("DETERMINE")
-    AsyncStorage.getItem(this.clientserverUserId)
-      .then((serverUserId) => {
-        // If there isn't a stored serverUserId, then fetch one from the server.
-        if (!serverUserId) {
-          this.socket.emit('userJoined', null);
-          this.socket.on('userJoined', (serverUserId) => {
-            AsyncStorage.setItem(this.clientserverUserId, serverUserId);
-            this.joined = true;
-            this.serverUserId = serverUserId
-            console.warn("DETERMINE",onJoined)
-
-            onJoined();
-          });
-        } else {
-          this.socket.emit('userJoined', serverUserId);
-          console.warn("DETERMINE",onJoined)
-          onJoined();
-        }
-      })
-      .catch((e) => alert(e));
+  constructor() {
+    this.clientserverUserId = Platform.OS === 'ios' ? 'IS' : 'AN';
+    this.lasreceived = null;
   }
 
-  /**
-   * When a message is sent, send the message to the server
-   * and store it in this component's state.
-   */
-  send(messages=[]) {
+  static generatesUserId() {
+    //return (Math.random() *100000).toString();
+    return Platform.OS === 'ios' ? 'IS' : 'AN';
+  }
+
+  connect() {
+    //192.168.1.19
+    //192.168.2.14
+    this.socket = SocketIOClient('http://192.168.2.14:3000');
+    
+    this.socket.on('message', (message) => {
+      store.dispatch(receiveMessage(message))
+    });
+
+    this.socket.on('userJoined', (serverUserId) => {
+      this.serverUserId = serverUserId;
+      AsyncStorage.setItem(this.clientserverUserId, serverUserId);
+      store.dispatch(joinedChat());
+    });
+
+
+    return new Promise((resolve) => {
+      AsyncStorage.getItem(this.clientserverUserId)
+        .then((serverUserId) => {
+            this.socket.emit('tryJoin', serverUserId ? serverUserId : null);
+            resolve();
+        }).catch((e) => alert(e));
+    })
+  }
+
+
+  send(messages = []) {
     this.socket.emit('message', messages[0]);
   }
-  }
+}

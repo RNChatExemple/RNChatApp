@@ -12,7 +12,7 @@ import mySaga from './src/Configs/sagas'
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
 // mount it on the Store
-const store = createStore(
+export const store = createStore(
   reducer,
   applyMiddleware(sagaMiddleware)
 )
@@ -30,7 +30,6 @@ export default class App extends Component {
       </Provider>
     );
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -38,5 +37,3 @@ const styles = StyleSheet.create({
     flex: 1
   },
 });
-
-
