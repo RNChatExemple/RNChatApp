@@ -47,9 +47,9 @@ class VisibleChat extends Component {
 
 
 const mapStateToProps = state => {
-  const storedMessages = state.messages;
-  const storedUserId = state.userId;
-  const storeSrvJoined = state.joined;  
+  const storedMessages = state.chat.messages;
+  const storedUserId = state.chat.userId;
+  const storeSrvJoined = state.chat.joined;  
 
   return {
     messages: storedMessages,
