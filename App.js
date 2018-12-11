@@ -1,14 +1,16 @@
 import React, {Component, } from 'react';
-import {View, StyleSheet,Text} from 'react-native';
-import VisibleChat from './src/Containers/Chat/visibleChat'
+import {View, StyleSheet, Button} from 'react-native';
+
+
 //REDUX + SAGGA
 import { Provider , connect } from 'react-redux';
 import { createStore, applyMiddleware ,  combineReducers} from 'redux'
 import createSagaMiddleware from 'redux-saga'
 //REACT NAVIGATION
-import { createStackNavigator, createAppContainer } from "react-navigation";
 import reducer from './src/Configs/reducer';
-import mySaga from './src/Configs/sagas'
+import mySaga from './src/Configs/sagas';
+import AppNavigator from './src/Configs/navigator';
+
 //REACT NAVIGATION + REDUX 
 import {
   reduxifyNavigator,
@@ -16,20 +18,8 @@ import {
   createNavigationReducer,
 } from 'react-navigation-redux-helpers';
 
-
 //REACT NAVIGATION
-const AppNavigator = createStackNavigator({
-  Home: {
-    screen: VisibleChat
-  }
-});
-
 const navReducer = createNavigationReducer(AppNavigator);
-
-const appReducer = combineReducers({
-  nav: navReducer,
-  chat: reducer
-});
 
 // Note: createReactNavigationReduxMiddleware must be run before reduxifyNavigator
 const navMiddleware = createReactNavigationReduxMiddleware(
@@ -38,6 +28,7 @@ const navMiddleware = createReactNavigationReduxMiddleware(
 );
 
 const navApp = reduxifyNavigator(AppNavigator, "root");
+
 const mapStateToProps = (state) => ({
   state: state.nav,
 });
@@ -47,8 +38,12 @@ const AppWithNavigationState = connect(mapStateToProps)(navApp);
 //REDUX + SAGA
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
-// mount it on the Store
 
+//Creation du store
+const appReducer = combineReducers({
+  nav: navReducer,
+  chat: reducer
+});
 const appMiddleware  = [sagaMiddleware, navMiddleware];
 export const store = createStore(
   appReducer,

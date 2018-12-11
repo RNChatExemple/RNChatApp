@@ -33,6 +33,7 @@ export default class WebSocketUtils {
   connect() {
     //192.168.1.19
     //192.168.2.14
+    //192.168.1.123
     this.socket = SocketIOClient('http://192.168.2.14:3000');
     
     this.socket.on('message', (message) => {

@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator , TouchableOpacity , Text , Button } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { connect } from 'react-redux';
 import { joinChat, sendMessage, setUserId} from '../../Configs/reducer'
+import styles from './visibleChat.style';
 
 class VisibleChat extends Component {
+
+  //Ajout du bouton dans la barre de navigation
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerRight: (
+        <TouchableOpacity onPress={() => navigation.navigate('Stats')} >
+        <Text> Stats </Text>
+       </TouchableOpacity>
+      ),
+    };
+  };
+
   constructor(props) {
     super(props);
     //Ce bind permet de garder d'utiliser 'this' dans le callback
@@ -25,14 +38,21 @@ class VisibleChat extends Component {
     return this.props.joined ? this.renderChatView(user) : this.renderActivityIndicator();
   }
 
+  onPress() {
+    this.props.navigation.navigate('Stats');
+  }
+
   renderChatView(user) {
     return (
-      <GiftedChat
-        style={{flex : 1}}
-        messages={this.props.messages}
-        onSend={this.onSend}
-        user={user}
-      />)
+      <View style={{flex : 1}}>
+        <GiftedChat
+          messages={this.props.messages}
+          onSend={this.onSend}
+          user={user}
+          renderAvatar={null}
+          maxInputLength={500}
+        />
+      </View>)
   }
 
   renderActivityIndicator(){
@@ -42,14 +62,12 @@ class VisibleChat extends Component {
       </View>
       )
   }
-
 }
-
 
 const mapStateToProps = state => {
   const storedMessages = state.chat.messages;
   const storedUserId = state.chat.userId;
-  const storeSrvJoined = state.chat.joined;  
+  const storeSrvJoined = state.chat.joined;
 
   return {
     messages: storedMessages,
