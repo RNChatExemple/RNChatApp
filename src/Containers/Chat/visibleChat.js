@@ -11,7 +11,7 @@ class VisibleChat extends Component {
     return {
       headerRight: (
         <TouchableOpacity onPress={() => navigation.navigate('Stats')} >
-        <Text> Stats </Text>
+          <Text> Stats </Text>
        </TouchableOpacity>
       ),
     };
