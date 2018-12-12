@@ -8,24 +8,15 @@ class VisibleStats extends Component {
   }
 
   render() {
-    return this.renderChatView()
+    return this.renderStatsView()
   }
 
-  renderChatView() {
+  renderStatsView() {
     return (
       <View>
           <Text>Hello stats</Text>       
       </View>)
   }
-
-  renderActivityIndicator(){
-    return (
-      <View style={{flex:1, justifyContent: 'center'}}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-      )
-  }
-
 }
 
 const mapStateToProps = state => {

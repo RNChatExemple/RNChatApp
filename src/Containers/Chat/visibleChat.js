@@ -3,7 +3,6 @@ import { View, ActivityIndicator , TouchableOpacity , Text , Button } from 'reac
 import { GiftedChat } from 'react-native-gifted-chat';
 import { connect } from 'react-redux';
 import { joinChat, sendMessage, setUserId} from '../../Configs/reducer'
-import styles from './visibleChat.style';
 
 class VisibleChat extends Component {
 
