@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, ActivityIndicator , Text } from 'react-native';
 import { connect } from 'react-redux';
+import styles from './visibleStats.style';
+
 
 class VisibleStats extends Component {
   constructor(props) {
@@ -8,28 +10,31 @@ class VisibleStats extends Component {
   }
 
   render() {
-    return this.renderChatView()
+    return this.renderStatsView()
   }
 
-  renderChatView() {
+  renderStatsView() {
     return (
-      <View>
-          <Text>Hello stats</Text>       
-      </View>)
-  }
-
-  renderActivityIndicator(){
-    return (
-      <View style={{flex:1, justifyContent: 'center'}}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View styles={styles.containter}>
+        <View style={styles.statTextContainer}>
+          <Text style={styles.statTextTitle}>Total</Text>       
+          <Text style={styles.statText}>{this.props.nbMessages}</Text>       
+        </View>
+        <View style={styles.statTextContainer}>
+          <Text style={styles.statTextTitle}>Sended</Text>       
+          <Text style={styles.statText}>{this.props.nbMessagesSended}</Text>       
+        </View>
       </View>
       )
   }
-
 }
 
 const mapStateToProps = state => {
+  const storedNbMessages = state.chat.nbMessages;
+  const storedNbMessagesSended = state.chat.nbSendedMessages
   return {
+    nbMessages : storedNbMessages,
+    nbMessagesSended : storedNbMessagesSended
   };
 };
 

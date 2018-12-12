@@ -11,16 +11,31 @@ const handleMessage = (currentMessages = [], messages, inverted = true) => {
   }
   return inverted ? messages.concat(currentMessages) : currentMessages.concat(messages);
 }
+
+const getSendedMessageCount = (messages = [] , userId) => {
+  if (!Array.isArray(messages)) {
+    messages = [messages];
+  }
+  console.log(messages)
+
+  const userMessages = messages.filter((elem) => {
+    return elem.user._id === userId;
+  });
+  return userMessages.length;
+}
+
+
 //https://github.com/erikras/ducks-modular-redux
 
 
 //FONCTIONS PURE 
-export default function reducer(state = { messages: [] , userId : null, joined : false}, action) {
+export default function reducer(state = { messages: [] , userId : null, joined : false, nbMessages: 0 , nbSendedMessages : 0}, action) {
     switch (action.type) {
       case SEND_MESSAGE:
-      return { ...state , messages : handleMessage(state.messages, action.payload)};
       case RECEIVE_MESSAGE:
-      return { ...state , messages : handleMessage(state.messages, action.payload)};
+        const messages = handleMessage(state.messages, action.payload);
+        const nbSendedMessages = getSendedMessageCount(messages, state.userId);
+        return { ...state , messages : messages , nbMessages : messages.length , nbSendedMessages : nbSendedMessages };
       case SET_USER_ID :
         return { ...state , userId : action.payload};
       case JOINED_CHAT :
@@ -30,6 +45,8 @@ export default function reducer(state = { messages: [] , userId : null, joined :
     }
   }
 
+
+  //Actions
   export function joinChat() {
     return { type: JOIN_CHAT };
   }
