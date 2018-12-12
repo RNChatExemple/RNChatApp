@@ -9,8 +9,10 @@
   "dependencies": {
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.3",
+    "react-native-easy-grid": "^0.2.0",
     "react-native-gesture-handler": "^1.0.10",
     "react-native-gifted-chat": "^0.4.3",
+    "react-native-sensors": "^5.1.4",
     "react-navigation": "^3.0.7",
     "react-navigation-redux-helpers": "^2.0.8",
     "react-redux": "^5.1.1",
