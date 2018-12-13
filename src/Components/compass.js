@@ -1,99 +1,52 @@
 import React, {Component} from 'react';
 import {Text, View, Image, Dimensions} from 'react-native';
 import {Grid, Col, Row} from 'react-native-easy-grid';
-import { magnetometer } from "react-native-sensors";
+import MagnetometerUtils from '../Utils/Magnetometer';
 
 const {height, width} = Dimensions.get('window');
 
 export default class Compass extends Component {
+   compassUtils = new MagnetometerUtils();
 
   constructor() {
     super();
     this.state = {
-      magnetometer: '0',
+      sensorData: '0',
     };
   }
 
   componentDidMount() {
-    this._toggle();
+    this.compassUtils.startSubscription(sensorData => {
+      this.setState({sensorData: sensorData});
+    });
   };
 
   componentWillUnmount() {
-    this._unsubscribe();
-  };
-
-  _toggle = () => {
-    if (this._subscription) {
-      this._unsubscribe();
-    } else {
-      this._subscribe();
-    }
-  };
-
-  _subscribe =  () => {
-      this._subscription = magnetometer
-        this._subscription.subscribe(sensorData => {
-            this.setState({magnetometer: this._angle(sensorData)});
-          });
-    };
-
-  _unsubscribe = () => {
-    this._subscription && this._subscription.stop();
-    this._subscription = null;
-  };
-
-  _angle = (magnetometer) => {
-    if (magnetometer) {
-      let {x, y, z} = magnetometer;
-
-      if (Math.atan2(y, x) >= 0) {
-        angle = Math.atan2(y, x) * (180 / Math.PI);
-      }
-      else {
-        angle = (Math.atan2(y, x) + 2 * Math.PI) * (180 / Math.PI);
-      }
-    }
-
-    return Math.round(angle);
-  };
-
-  _direction = (degree) => {
-    if (degree >= 22.5 && degree < 67.5) {
-      return 'NE';
-    }
-    else if (degree >= 67.5 && degree < 112.5) {
-      return 'E';
-    }
-    else if (degree >= 112.5 && degree < 157.5) {
-      return 'SE';
-    }
-    else if (degree >= 157.5 && degree < 202.5) {
-      return 'S';
-    }
-    else if (degree >= 202.5 && degree < 247.5) {
-      return 'SW';
-    }
-    else if (degree >= 247.5 && degree < 292.5) {
-      return 'W';
-    }
-    else if (degree >= 292.5 && degree < 337.5) {
-      return 'NW';
-    }
-    else {
-      return 'N';
-    }
-  };
-
-  // Match the device top with pointer 0° degree. (By default 0° starts from the right of the device.)
-  _degree = (magnetometer) => {
-    return magnetometer - 90 >= 0 ? magnetometer - 90 : magnetometer + 271;
+    this.compassUtils.stopSubscription();
   };
 
   render() {
+    const {renderFullScreen} = this.props
+    if(!renderFullScreen){
+      return this.renderText();
+    }else{
+      return this.renderFullScreenView();
+    }
+  }
 
+  renderText() {
+    const {textStyle , textContainerStyle , textTitleStyle}  = this.props
+    return (
+      <View style={textContainerStyle}>
+        <Text style={textTitleStyle}>Orientation</Text>       
+        <Text style={textStyle}>{this.compassUtils.getDirectionFromMagnometerData(this.state.sensorData)}</Text>
+      </View>
+    )
+  }
+
+  renderFullScreenView() {
     return (
       <Grid style={{backgroundColor: 'black'}}>
-
         <Row style={{alignItems: 'center'}} size={.9}>
           <Col style={{alignItems: 'center'}}>
             <Text
@@ -101,7 +54,7 @@ export default class Compass extends Component {
                 color: '#fff',
                 fontSize: height / 26,
                 fontWeight: 'bold'
-              }}>{this._direction(this._degree(this.state.magnetometer))}
+              }}>{this.compassUtils.getDirectionFromMagnometerData(this.state.sensorData)}
             </Text>
           </Col>
         </Row>
@@ -125,19 +78,17 @@ export default class Compass extends Component {
             position: 'absolute',
             textAlign: 'center'
           }}>
-            {this._degree(this.state.magnetometer)}°
+            {this.compassUtils.getDegreeFromMagnometerData(this.state.sensorData)}°
           </Text>
 
           <Col style={{alignItems: 'center'}}>
-
             <Image source={require("../assets/compass_bg.png")} style={{
               height: width - 80,
               justifyContent: 'center',
               alignItems: 'center',
               resizeMode: 'contain',
-              transform: [{rotate: 360 - this.state.magnetometer + 'deg'}]
+              transform: [{rotate: 360 - this.compassUtils.getAngleFromMagnometerData(this.state.sensorData) + 'deg'}]
             }}/>
-
           </Col>
         </Row>
       </Grid>

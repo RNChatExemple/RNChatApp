@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, ActivityIndicator , TouchableOpacity , Text , Button } from 'react-native';
+import { View, ActivityIndicator , Text } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { connect } from 'react-redux';
 import { joinChat, sendMessage, setUserId} from '../../Configs/reducer'
+import { Badge } from 'react-native-elements'
 
 class VisibleChat extends Component {
 
@@ -10,9 +11,10 @@ class VisibleChat extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       headerRight: (
-        <TouchableOpacity onPress={() => navigation.navigate('Stats')} >
-          <Text> Stats </Text>
-       </TouchableOpacity>
+        <Badge onPress={() => navigation.navigate('Stats')}
+        containerStyle={{marginRight : 4}}>
+          <Text style={{color : 'white'}}>Stats</Text>
+       </Badge>
       ),
     };
   };

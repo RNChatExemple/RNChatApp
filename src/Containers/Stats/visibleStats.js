@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, ActivityIndicator , Text } from 'react-native';
+import { View, TouchableHighlight , Text } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './visibleStats.style';
-
+import { Button } from 'react-native-elements'
+import Compass from '../../Components/compass';
 
 class VisibleStats extends Component {
   constructor(props) {
@@ -23,6 +24,9 @@ class VisibleStats extends Component {
         <View style={styles.statTextContainer}>
           <Text style={styles.statTextTitle}>Sended</Text>       
           <Text style={styles.statText}>{this.props.nbMessagesSended}</Text>       
+        </View>
+        <View style={styles.statTextContainer}>
+        <Compass textStyle={styles.statText}  textTitleStyle={styles.statTextTitle} textContainerStyle={styles.statTextContainer}></Compass>
         </View>
       </View>
       )
