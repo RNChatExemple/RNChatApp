@@ -8,10 +8,11 @@ class VisibleChat extends Component {
 
   //Ajout du bouton dans la barre de navigation
   static navigationOptions = ({ navigation }) => {
+    //Ici redéfinir la props onPress  et y ajouter navigation.navigate('Stats')
     return {
       headerRight: (
-        <TouchableOpacity onPress={() => navigation.navigate('Stats')} >
-        <Text> Stats </Text>
+        <TouchableOpacity>
+          <Text> Stats </Text>
        </TouchableOpacity>
       ),
     };

@@ -10,11 +10,5 @@ export default AppNavigator = createStackNavigator({
         headerBackTitle: null,       
       })
     }, 
-    Stats: {
-      screen: VisibleStats,
-      navigationOptions: () => ({
-        title: `Stats`,
-        headerBackTitle: null
-      })
-    }
+    //Ajouter écran stats ici poitant vers VisibleStats appelé 'Stats'
   })
