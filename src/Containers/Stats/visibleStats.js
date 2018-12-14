@@ -18,11 +18,11 @@ class VisibleStats extends Component {
       <View styles={styles.containter}>
         <View style={styles.statTextContainer}>
           <Text style={styles.statTextTitle}>Total</Text>       
-          <Text style={styles.statText}>{this.props.nbMessages}</Text>       
+          <Text style={styles.statText}>Nb messages</Text>       
         </View>
         <View style={styles.statTextContainer}>
           <Text style={styles.statTextTitle}>Sended</Text>       
-          <Text style={styles.statText}>{this.props.nbMessagesSended}</Text>       
+          <Text style={styles.statText}>Nb messages en</Text>       
         </View>
       </View>
       )
@@ -30,11 +30,7 @@ class VisibleStats extends Component {
 }
 
 const mapStateToProps = state => {
-  const storedNbMessages = state.chat.nbMessages;
-  const storedNbMessagesSended = state.chat.nbSendedMessages
   return {
-    nbMessages : storedNbMessages,
-    nbMessagesSended : storedNbMessagesSended
   };
 };
 

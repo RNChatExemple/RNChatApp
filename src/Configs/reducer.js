@@ -34,8 +34,7 @@ export default function reducer(state = { messages: [] , userId : null, joined :
       case SEND_MESSAGE:
       case RECEIVE_MESSAGE:
         const messages = handleMessage(state.messages, action.payload);
-        const nbSendedMessages = getSendedMessageCount(messages, state.userId);
-        return { ...state , messages : messages , nbMessages : messages.length , nbSendedMessages : nbSendedMessages };
+        return { ...state , messages : messages };
       case SET_USER_ID :
         return { ...state , userId : action.payload};
       case JOINED_CHAT :
